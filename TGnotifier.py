@@ -1,7 +1,7 @@
 from notifiers import get_notifier
 
-token = "XXXX"
-id = "XXXX"
+token = "XXXXX"
+id = "XXXXX"
 
 def send_to_tg(data):
     telegram = get_notifier('telegram')

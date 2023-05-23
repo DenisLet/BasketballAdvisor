@@ -365,7 +365,7 @@ def main(url, coefficients):
         }
 
     status_vs_handicap = get_status_vs_value(t1_coef, t2_coef)
-    # print(status_vs_handicap)
+
 
 
     def decorator_for_bet(func):
