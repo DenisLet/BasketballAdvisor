@@ -228,6 +228,23 @@ def main(url, coefficients):
         # print(quarters_series)
         return quarters_series
 
+    def get_total_series(matches, average):
+        total_series = []
+        for match in matches:
+            total_series.append(sum(match[:-1]))
+
+        series_O_U = []
+        for val in total_series:
+            if val + 0.5 < average:
+                series_O_U.append('U')
+            else:
+                series_O_U.append('O')
+
+        return series_O_U
+
+
+    true_series1 = get_quarters_winlost_series(team1_scores)
+
 
     def get_quarters_totals_series(matches, average):
         quarters_series = []
@@ -237,7 +254,7 @@ def main(url, coefficients):
             quarters = [(results[i] + results[i + 1]) for i in range(0, len(results), 2)]
 
             for summ in quarters:
-                if summ + 0.5 < average:
+                if summ + 0.5 <  average:
                     quarters_series.append('U')
                 else:
                     quarters_series.append('O')
@@ -257,6 +274,10 @@ def main(url, coefficients):
 
     team1_series = concatenate_matches(get_quarters_winlost_series(team1_scores))
     team2_series = concatenate_matches(get_quarters_winlost_series(team2_scores))
+
+    print(team1_scores)
+    print(true_series1)
+    print(team1_series)
 
     def get_last_games_series(lst):
         count = 1
@@ -440,15 +461,26 @@ def main(url, coefficients):
         bets += bet2
 
 
-    def each_total(data):
-        total = len(data)
-        return sum([sum(i[:8]) for i in data]) / (total*4)
+    def each_total(data, case=None):
+        if case == 'quarter':
+            denominator = len(data)*4
+        else:
+            denominator = len(data)
+        return sum([sum(i[:8]) for i in data]) / denominator
 
-    average_per_quarter = ceil(each_total(team1_scores)/2 + each_total(team2_scores)/2)
 
+
+
+
+
+    average_per_quarter = ceil(each_total(team1_scores, 'quarter')/2 + each_total(team2_scores, 'quarter')/2)
+    avarage_per_match = ceil(each_total(team1_scores)/2 + each_total(team2_scores)/2)
+    print(avarage_per_match, url)
     # print(average_per_quarter)
     team1_total_series = concatenate_matches(get_quarters_totals_series(team1_scores, average_per_quarter))
     team2_total_series = concatenate_matches(get_quarters_totals_series(team2_scores, average_per_quarter))
+    team1_total_match_series = get_total_series(team1_scores, avarage_per_match)
+    print('answer',count_max_consecutive_O_U(team1_total_match_series)) ### stop here 31.05
     # print(team1_total_series)
     # print(team2_total_series)
     team1_last_total_series = get_last_games_series(team1_total_series)
